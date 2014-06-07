@@ -1,0 +1,41 @@
+#include <Servo.h>
+
+Servo green;
+Servo blue;
+
+int buttonPin = 5;
+int button;
+int choice = 0;
+
+void setup()
+{
+green.attach(3);
+blue.attach(4);
+green.write(0);
+blue.write(0);
+
+pinMode(buttonPin, INPUT_PULLUP);
+
+}
+
+void loop()
+{
+button = digitalRead(buttonPin);
+
+while(button == LOW)
+{
+choice= random(0, 2);
+
+if (choice == 0)
+{
+green.write(150);
+green.write(0);
+}
+else if (choice == 1)
+{
+blue.write(150);
+blue.write(0);
+}
+}
+}
+
