@@ -1,0 +1,187 @@
+#include <Servo.h>
+
+int buttonStateA = 0;
+int buttonStateB = 0;
+int buttonStateC = 0;
+int buttonStateD = 0;
+
+int opR = -1;
+int opL = -1;
+
+int a = 2;
+int b = 6;
+int c = 11;
+int d = 13;
+
+int A = 3;
+int B = 4;
+int C = 10;
+int D = 12;
+
+int right = 9;
+int left = 8;
+
+Servo blue;
+Servo green;
+
+void setup()
+{
+  pinMode(A, OUTPUT);
+  pinMode(a, INPUT_PULLUP);
+  
+  pinMode(B, OUTPUT);
+  pinMode(0, INPUT_PULLUP);
+  
+  pinMode(C, OUTPUT);
+  pinMode(c, INPUT_PULLUP);
+  
+  pinMode(D, OUTPUT);
+  pinMode(d, INPUT_PULLUP);
+  
+  blue.attach(4);
+  green.attach(3);
+  blue.write(0);
+  green.write(0);
+  
+  pinMode(right, OUTPUT);
+  pinMode(left,OUTPUT);
+}
+
+void loop()
+{
+  buttonStateA = digitalRead(a);
+  buttonStateB = digitalRead(b);
+  buttonStateC = digitalRead(c);
+  buttonStateD = digitalRead(d);
+  
+  if(buttonStateA == LOW)
+  {
+    digitalWrite(A, HIGH);
+    opL = 1;
+    if((buttonStateB == HIGH) && (buttonStateC == LOW) && (buttonStateD == HIGH))
+    {
+      reward(right);
+      reward(left);
+    }
+    else if((buttonStateB == HIGH) && (buttonStateC == HIGH) && (buttonStateD == LOW))
+    {
+      punish(left);
+      reward(right);
+    }
+  }
+  else
+  {
+    digitalWrite(A, HIGH);
+  }
+  
+  if(buttonStateB == LOW)
+  {
+    digitalWrite(B, HIGH);
+    opL = 0;
+    if((buttonStateA == HIGH) && (buttonStateC == LOW) && (buttonStateD == HIGH))
+    {
+      punish(right);
+      reward(left);
+    }
+    else if((buttonStateA == HIGH) && (buttonStateC == HIGH) && (buttonStateD == LOW))
+    {
+      punish(right);
+      punish(left);
+    }
+  }
+  else
+  {
+    digitalWrite(B, LOW);
+  }
+  
+  if(buttonStateC == LOW)
+  {
+    digitalWrite(C, HIGH);
+    opR = 1;
+    if((buttonStateA == LOW)&&(buttonStateB == HIGH) &&(buttonStateD == HIGH))
+    {
+      reward(left);
+      reward(right);
+    }
+    else if((buttonStateA == HIGH) && (buttonStateB == LOW) && (buttonStateD == HIGH))
+    {
+      reward(left);
+      punish(right);
+    }
+  }
+  else
+  {
+    digitalWrite(C, LOW);
+  }
+  
+  if(buttonStateD == LOW)
+  {
+    digitalWrite(D, HIGH);
+    opR = 0;
+    
+    if((buttonStateA == LOW) && (buttonStateB == HIGH) && (buttonStateC == HIGH))
+    {
+      punish(left);
+      reward(right);
+    }
+    else if((buttonStateA == HIGH) && (buttonStateB == LOW) && (buttonStateC == HIGH))
+    {
+      punish(left);
+      punish(right);
+    }
+  }
+  else
+  {
+    digitalWrite(D, LOW);
+  }
+  
+  /*if((opR == opL)&&(opR > -1))
+  {
+    if(opR == 1)
+    {
+      //reward both
+    }
+    else
+    {
+      //do nothing? punish both?
+    }
+  }
+  else if ((opR != opL) && (opR > -1))
+  {
+    if(opR > opL)
+    {
+      //punish R
+      //reward L
+    }
+    else if (opL > opR)
+    {
+      //punishL
+      //reward R
+    }
+  }
+  else
+  {
+    //check again
+  }*/
+}
+
+void punish (int LED)
+{
+  blue.write(100);
+  delay(5000);
+  digitalWrite(LED, HIGH);
+  blue.write(0);
+  delay(500);
+  digitalWrite(LED, LOW);
+}
+
+void reward(int LED)
+{
+  green.write(200);
+  delay(5000);
+  digitalWrite(LED, HIGH);
+  green.write(0);
+  delay(500);
+  digitalWrite(LED,LOW);
+} 
+  
